@@ -30,7 +30,7 @@
 		<div class='content mt20'>
 			<div class="p10">
 				<span class="<?php echo $type;?>">
-					<?php echo $message . '&#12288;&#12288;' . $content; ?>	
+					<?php echo $message . '<br>' . $content; ?>	
 				</span>
 			</div>
 		</div>
