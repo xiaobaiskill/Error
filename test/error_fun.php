@@ -93,8 +93,14 @@ function fatal_error()
 		$type          = error_type($e['type']);
 		$trace_content = explode('Stack trace:', $e['message']);
 		$content       = "FILE: " . $e['file'] . "&#12288;LINE: {$e['line']}.";
-		$message       = explode(' in ', $trace_content[0])[0];
-		$trace         = $trace_content[1];
+		
+		$message       = $trace_content[0];
+		$trace         = '';
+
+		if ($mag_trace = explode(' in ', $trace_content[0]) && isset($mag_trace[1])) {
+			$message = $mag_trace[0];
+			$trace   = $mag_trace[1];
+		}
 		error_handle($type, $message, $content, $trace);
 	}
 }
@@ -106,7 +112,7 @@ function app_exception($e)
 	$type  = error_type($errno);
 
 	$trace_content = $e->getTrace();
-	if ('E' == $trace[0]['function']) {
+	if ('E' == $trace_content[0]['function']) {
 		$file = $trace_content[0]['file'];
 		$line = $trace_content[0]['line'];
 	} else {
@@ -117,7 +123,7 @@ function app_exception($e)
 	$content = "FILE: " . $file . "&#12288;LINE: {$line}.";
 
 	$trace = '';
-	foreach ($trace as $k => $v) {
+	foreach ($trace_content as $k => $v) {
 		if (isset($v['file'])) {
 			$trace .= '#' . $k . $v['file'] . ' ( ' . $v['line'] . ' ): ' . $v['function'] . '<br>';
 		}
